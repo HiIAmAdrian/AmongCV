@@ -13,7 +13,6 @@ import { movePlayer } from "./movement";
 import { animateMovement } from "./animation";
 import { GATHER_STAR_X, GATHER_STAR_Y } from "./starLocations";
 import star from "./assets/star.png";
-import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 const player = {};
 let pressedKeys = [];
@@ -21,9 +20,7 @@ let obstacle;
 
 class MyGame extends Phaser.Scene {
   constructor() {
-    super({
-      key: "examples",
-    });
+    super();
   }
 
   preload() {
@@ -102,16 +99,6 @@ const config = {
     arcade: {
       debug: true,
     },
-  },
-  plugins: {
-    scene: [
-      {
-        key: "rexUI",
-        plugin: UIPlugin,
-        mapping: "rexUI",
-      },
-      // ...
-    ],
   },
   scene: MyGame,
 };

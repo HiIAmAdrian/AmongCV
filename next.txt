@@ -1,0 +1,29 @@
+0. Code refactoring (styling, no magic vars, divide what is possible into functions and files, single responsability principle,)
+
+1. Build the rest of obstacles by: 
+-creating 3 aditional modals with different CV text in index.html
+-create a function "obstacleCreator", pass this to it and do this.physics.add
+-in that function create fields to each obstacle: a. id's of their respective modals
+-modify doAtCollide to work with general obstacle
+
+2. Populate modals with information
+
+3. Point system in corner of camera
+
+4. Welcome modal, among CV, explanation
+
+5. When modal is open, game is paused
+
+6. Add red ghost to follow player +: 
+-when collide with player, kill animation from among us
+-modal with game lost and restart button
+-after 2nd attempt maybe add eliminate ghost btn
+
+7. Further additions:
+-scoreboard(time counted only when modals are closed) (choose name for that)
+-total attempts
+-add stop animation frame for player
+-custom design of map, player, modals, etc.
+-pause game button
+-gamemode(easy: 1 ghost, hard: 10 ghosts, fog of war), shoot ghosts with bullets
+-make it more playable (do little tasks like in original game to unlock CVmodals)
