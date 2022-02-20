@@ -11,9 +11,12 @@ import {
 } from "./constants";
 import { movePlayer } from "./movement";
 import { animateMovement } from "./animation";
+import { GATHER_STAR_X, GATHER_STAR_Y } from "./starLocations";
+import star from "./assets/star.png";
 
 const player = {};
 let pressedKeys = [];
+let obstacle;
 
 class MyGame extends Phaser.Scene {
   constructor() {
@@ -22,6 +25,7 @@ class MyGame extends Phaser.Scene {
 
   preload() {
     this.load.image("ship", shipImg);
+    this.load.image("star", star);
     this.load.spritesheet("player", playerSprite, {
       frameWidth: PLAYER_SPRITE_WIDTH,
       frameHeight: PLAYER_SPRITE_HEIGHT,
@@ -30,9 +34,24 @@ class MyGame extends Phaser.Scene {
 
   create() {
     const ship = this.add.image(0, 0, "ship");
-    player.sprite = this.add.sprite(PLAYER_START_X, PLAYER_START_Y, "player");
+    obstacle = this.physics.add.sprite(GATHER_STAR_X, GATHER_STAR_Y, "star");
+    obstacle.setScale(0.01);
+    player.sprite = this.physics.add.sprite(
+      PLAYER_START_X,
+      PLAYER_START_Y,
+      "player"
+    );
     player.sprite.displayHeight = PLAYER_HEIGHT;
     player.sprite.displayWidth = PLAYER_WIDTH;
+
+    this.physics.add.collider(
+      player.sprite,
+      obstacle,
+      function (player, obstacle) {
+        obstacle.destroy();
+        alert();
+      }
+    );
 
     this.anims.create({
       key: "running",
@@ -55,7 +74,12 @@ class MyGame extends Phaser.Scene {
     this.scene.scene.cameras.main.centerOn(player.sprite.x, player.sprite.y);
     movePlayer(pressedKeys, player.sprite);
     animateMovement(pressedKeys, player.sprite);
+    this.physics.collide(player.sprite, star, collectStar);
   }
+}
+
+function collectStar(player, star) {
+  console.log("hit");
 }
 
 const config = {
@@ -63,6 +87,12 @@ const config = {
   parent: "phaser-example",
   width: 800,
   height: 450,
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: true,
+    },
+  },
   scene: MyGame,
 };
 
