@@ -13,6 +13,7 @@ import { movePlayer } from "./movement";
 import { animateMovement } from "./animation";
 import { GATHER_STAR_X, GATHER_STAR_Y } from "./starLocations";
 import star from "./assets/star.png";
+import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 const player = {};
 let pressedKeys = [];
@@ -20,7 +21,9 @@ let obstacle;
 
 class MyGame extends Phaser.Scene {
   constructor() {
-    super();
+    super({
+      key: "examples",
+    });
   }
 
   preload() {
@@ -44,14 +47,7 @@ class MyGame extends Phaser.Scene {
     player.sprite.displayHeight = PLAYER_HEIGHT;
     player.sprite.displayWidth = PLAYER_WIDTH;
 
-    this.physics.add.collider(
-      player.sprite,
-      obstacle,
-      function (player, obstacle) {
-        obstacle.destroy();
-        alert();
-      }
-    );
+    this.physics.add.collider(player.sprite, obstacle, doAtCollide);
 
     this.anims.create({
       key: "running",
@@ -74,12 +70,26 @@ class MyGame extends Phaser.Scene {
     this.scene.scene.cameras.main.centerOn(player.sprite.x, player.sprite.y);
     movePlayer(pressedKeys, player.sprite);
     animateMovement(pressedKeys, player.sprite);
-    this.physics.collide(player.sprite, star, collectStar);
+    this.physics.collide(player.sprite, star, () => alert());
   }
 }
 
-function collectStar(player, star) {
-  console.log("hit");
+function doAtCollide(player, obstacle) {
+  obstacle.destroy();
+  let element = document.getElementById("modalCV");
+  let element2 = document.getElementById("m1-o");
+  if (element) {
+    element.style.display = "flex";
+    element.style.position = "absolute";
+    element.style.zIndex = "1";
+    element2.style.display = "flex";
+
+    document.getElementById("closeButton").addEventListener("click", () => {
+      element.style.display = "none";
+      element.style.zIndex = "-1";
+      element2.style.display = "none";
+    });
+  }
 }
 
 const config = {
@@ -92,6 +102,16 @@ const config = {
     arcade: {
       debug: true,
     },
+  },
+  plugins: {
+    scene: [
+      {
+        key: "rexUI",
+        plugin: UIPlugin,
+        mapping: "rexUI",
+      },
+      // ...
+    ],
   },
   scene: MyGame,
 };

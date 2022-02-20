@@ -2,19 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="index.css" />
   </head>
-  <body>
+  <body id="m1-c">
     <style>
-      body {
-        background: #111;
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-        overflow: hidden;
-      }
       canvas {
+        padding: 0;
         border-radius: 10px;
+        margin: auto;
+        display: block;
       }
     </style>
+    <div class="box" id="modalCV">
+      <div
+        class="modal-container"
+        id="m1-o"
+        style="--m-background: transparent"
+      >
+        <div class="modal">
+          <h1 class="modal__title">Modal 1 Title</h1>
+          <p class="modal__text">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis ex
+            dicta maiores libero minus obcaecati iste optio, eius labore
+            repellendus.
+          </p>
+          <button class="modal__btn">Button &rarr;</button>
+          <a href="#m1-c" class="link-2" id="closeButton"></a>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
