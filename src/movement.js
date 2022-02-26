@@ -6,33 +6,33 @@ const isWithinMovementBoundries = (x, y) => {
   return !mapBounds[y] ? true : !mapBounds[y].includes(x);
 };
 
-export const movePlayer = (keys, player) => {
-  const absPlayerX = player.x + SHIP_WIDTH / 2;
-  const absPlayerY = player.y + SHIP_HEIGHT / 2 + 15;
+export const movePlayer = (gameState) => {
+  const absPlayerX = gameState.player.x + SHIP_WIDTH / 2;
+  const absPlayerY = gameState.player.y + SHIP_HEIGHT / 2 + 15;
   if (
-    keys.includes("ArrowUp") &&
+    gameState.cursors.up.isDown &&
     isWithinMovementBoundries(absPlayerX, absPlayerY - PLAYER_SPEED)
   ) {
-    player.y -= PLAYER_SPEED;
+    gameState.player.y -= PLAYER_SPEED;
   }
   if (
-    keys.includes("ArrowDown") &&
+    gameState.cursors.down.isDown &&
     isWithinMovementBoundries(absPlayerX, absPlayerY + PLAYER_SPEED)
   ) {
-    player.y += PLAYER_SPEED;
+    gameState.player.y += PLAYER_SPEED;
   }
   if (
-    keys.includes("ArrowLeft") &&
+    gameState.cursors.left.isDown &&
     isWithinMovementBoundries(absPlayerX - PLAYER_SPEED, absPlayerY)
   ) {
-    player.x -= PLAYER_SPEED;
-    player.flipX = true;
+    gameState.player.x -= PLAYER_SPEED;
+    gameState.player.flipX = true;
   }
   if (
-    keys.includes("ArrowRight") &&
+    gameState.cursors.right.isDown &&
     isWithinMovementBoundries(absPlayerX + PLAYER_SPEED, absPlayerY)
   ) {
-    player.x += PLAYER_SPEED;
-    player.flipX = false;
+    gameState.player.x += PLAYER_SPEED;
+    gameState.player.flipX = false;
   }
 };

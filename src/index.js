@@ -14,9 +14,7 @@ import { animateMovement } from "./animation";
 import { GATHER_STAR_X, GATHER_STAR_Y } from "./starLocations";
 import star from "./assets/star.png";
 
-const player = {};
-let pressedKeys = [];
-let obstacle;
+const gameState = {};
 
 class MyGame extends Phaser.Scene {
   constructor() {
@@ -34,17 +32,27 @@ class MyGame extends Phaser.Scene {
 
   create() {
     const ship = this.add.image(0, 0, "ship");
-    obstacle = this.physics.add.sprite(GATHER_STAR_X, GATHER_STAR_Y, "star");
-    obstacle.setScale(0.01);
-    player.sprite = this.physics.add.sprite(
+    gameState.obstacle = this.physics.add.sprite(
+      GATHER_STAR_X,
+      GATHER_STAR_Y,
+      "star"
+    );
+    gameState.obstacle.setScale(0.01);
+    gameState.player = this.physics.add.sprite(
       PLAYER_START_X,
       PLAYER_START_Y,
       "player"
     );
-    player.sprite.displayHeight = PLAYER_HEIGHT;
-    player.sprite.displayWidth = PLAYER_WIDTH;
 
-    this.physics.add.collider(player.sprite, obstacle, doAtCollide);
+    gameState.player.displayHeight = PLAYER_HEIGHT;
+    gameState.player.displayWidth = PLAYER_WIDTH;
+
+    gameState.cursors = this.input.keyboard.createCursorKeys();
+    this.physics.add.collider(
+      gameState.player,
+      gameState.obstacle,
+      doAtCollide
+    );
 
     this.anims.create({
       key: "running",
@@ -52,27 +60,21 @@ class MyGame extends Phaser.Scene {
       frameRate: 24,
       repeat: -1,
     });
-
-    this.input.keyboard.on("keydown", (e) => {
-      if (!pressedKeys.includes(e.code)) {
-        pressedKeys.push(e.code);
-      }
-    });
-    this.input.keyboard.on("keyup", (e) => {
-      pressedKeys = pressedKeys.filter((key) => key !== e.code);
-    });
   }
 
   update() {
-    this.scene.scene.cameras.main.centerOn(player.sprite.x, player.sprite.y);
-    movePlayer(pressedKeys, player.sprite);
-    animateMovement(pressedKeys, player.sprite);
-    this.physics.collide(player.sprite, star, () => alert());
+    this.scene.scene.cameras.main.centerOn(
+      gameState.player.x,
+      gameState.player.y
+    );
+    movePlayer(gameState);
+    animateMovement(gameState);
+    this.physics.collide(gameState.player, star, () => alert());
   }
 }
 
 function doAtCollide(player, obstacle) {
-  obstacle.destroy();
+  gameState.obstacle.destroy();
   let element = document.getElementById("modalCV");
   let element2 = document.getElementById("m1-o");
   if (element) {

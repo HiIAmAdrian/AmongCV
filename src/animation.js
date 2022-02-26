@@ -1,14 +1,19 @@
-export const animateMovement = (keys, player) => {
-  const runningKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+export const animateMovement = (gameState) => {
   if (
-    !player.anims.isPlaying &&
-    keys.some((key) => runningKeys.includes(key))
+    !gameState.player.anims.isPlaying &&
+    (gameState.cursors.up.isDown ||
+      gameState.cursors.down.isDown ||
+      gameState.cursors.right.isDown ||
+      gameState.cursors.left.isDown)
   ) {
-    player.play("running");
+    gameState.player.play("running");
   } else if (
-    !keys.some((key) => runningKeys.includes(key)) &&
-    player.anims.isPlaying
+    !gameState.cursors.up.isDown &&
+    !gameState.cursors.down.isDown &&
+    !gameState.cursors.right.isDown &&
+    !gameState.cursors.left.isDown &&
+    gameState.player.anims.isPlaying
   ) {
-    player.stop("running");
+    gameState.player.stop("running");
   }
 };
