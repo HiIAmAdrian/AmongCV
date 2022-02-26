@@ -11,7 +11,16 @@ import {
 } from "./constants";
 import { movePlayer } from "./movement";
 import { animateMovement } from "./animation";
-import { GATHER_STAR_X, GATHER_STAR_Y } from "./starLocations";
+import {
+  ADMIN_STAR_X,
+  ADMIN_STAR_Y,
+  WEAPONS_STAR_X,
+  WEAPONS_STAR_Y,
+  MED_STAR_X,
+  MED_STAR_Y,
+  ELECTRIC_STAR_X,
+  ELECTRIC_STAR_Y,
+} from "./starLocations";
 import star from "./assets/star.png";
 
 const gameState = {};
@@ -32,12 +41,31 @@ class MyGame extends Phaser.Scene {
 
   create() {
     const ship = this.add.image(0, 0, "ship");
-    gameState.obstacle = this.physics.add.sprite(
-      GATHER_STAR_X,
-      GATHER_STAR_Y,
+    gameState.obstacleAdmin = this.physics.add.sprite(
+      ADMIN_STAR_X,
+      ADMIN_STAR_Y,
       "star"
     );
-    gameState.obstacle.setScale(0.01);
+    gameState.obstacleWeapons = this.physics.add.sprite(
+      WEAPONS_STAR_X,
+      WEAPONS_STAR_Y,
+      "star"
+    );
+    gameState.obstacleMed = this.physics.add.sprite(
+      MED_STAR_X,
+      MED_STAR_Y,
+      "star"
+    );
+    gameState.obstacleElectric = this.physics.add.sprite(
+      ELECTRIC_STAR_X,
+      ELECTRIC_STAR_Y,
+      "star"
+    );
+    gameState.obstacleAdmin.setScale(0.01);
+    gameState.obstacleWeapons.setScale(0.01);
+    gameState.obstacleMed.setScale(0.01);
+    gameState.obstacleElectric.setScale(0.01);
+
     gameState.player = this.physics.add.sprite(
       PLAYER_START_X,
       PLAYER_START_Y,
@@ -48,9 +76,25 @@ class MyGame extends Phaser.Scene {
     gameState.player.displayWidth = PLAYER_WIDTH;
 
     gameState.cursors = this.input.keyboard.createCursorKeys();
+
     this.physics.add.collider(
       gameState.player,
-      gameState.obstacle,
+      gameState.obstacleAdmin,
+      doAtCollide
+    );
+    this.physics.add.collider(
+      gameState.player,
+      gameState.obstacleMed,
+      doAtCollide
+    );
+    this.physics.add.collider(
+      gameState.player,
+      gameState.obstacleElectric,
+      doAtCollide
+    );
+    this.physics.add.collider(
+      gameState.player,
+      gameState.obstacleWeapons,
       doAtCollide
     );
 
@@ -69,21 +113,38 @@ class MyGame extends Phaser.Scene {
     );
     movePlayer(gameState);
     animateMovement(gameState);
-    this.physics.collide(gameState.player, star, () => alert());
   }
 }
 
 function doAtCollide(player, obstacle) {
-  gameState.obstacle.destroy();
-  let element = document.getElementById("modalCV");
-  let element2 = document.getElementById("m1-o");
+  let modalBox = "Education";
+  let modalContainer = "education-o";
+  let closeButton = "closeButtonEducation";
+
+  if (obstacle.x === WEAPONS_STAR_X) {
+    modalBox = "Projects";
+    modalContainer = "projects-o";
+    closeButton = "closeButtonProjects";
+  } else if (obstacle.x === MED_STAR_X) {
+    modalBox = "Work";
+    modalContainer = "work-o";
+    closeButton = "closeButtonWork";
+  } else if (obstacle.x === ELECTRIC_STAR_X) {
+    modalBox = "Volunteer";
+    modalContainer = "volunteer-o";
+    closeButton = "closeButtonVolunteer";
+  }
+
+  obstacle.destroy();
+  let element = document.getElementById(modalBox);
+  let element2 = document.getElementById(modalContainer);
   if (element) {
     element.style.display = "flex";
     element.style.position = "absolute";
     element.style.zIndex = "1";
     element2.style.display = "flex";
 
-    document.getElementById("closeButton").addEventListener("click", () => {
+    document.getElementById(closeButton).addEventListener("click", () => {
       element.style.display = "none";
       element.style.zIndex = "-1";
       element2.style.display = "none";
